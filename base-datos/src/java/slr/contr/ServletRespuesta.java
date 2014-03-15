@@ -42,7 +42,8 @@ public class ServletRespuesta extends HttpServlet {
             out.println("<title>Servlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>YA!</h1> esta adentro!");
+            out.println("<h1>YA!</h1> esta adentro!<br>");
+            out.println("Checate esta: vienes desde " + request.getRemoteAddr());
             out.println("</body>");
             out.println("</html>");
         } finally {
