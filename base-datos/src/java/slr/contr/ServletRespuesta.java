@@ -36,13 +36,14 @@ public class ServletRespuesta extends HttpServlet {
         
         try {
             /* TODO output your page here. You may use following sample code. */
+            String pass = request.getParameter("password");
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
             out.println("<title>Servlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>YA!</h1> esta adentro!<br>");
+            out.println("<h1>YA!</h1> estas adentro " + request.getParameter("nombre") + "!<br>");
             out.println("Checate esta: vienes desde " + request.getRemoteAddr());
             out.println("</body>");
             out.println("</html>");
