@@ -18,8 +18,8 @@ public class Conexion {
     private String usr, pas;
 
     public Conexion(){
-        usr= "aaron";
-        pas= "BE47n04";
+        usr= "*****";
+        pas= "******";
     }
 
     public Connection conectar(){
