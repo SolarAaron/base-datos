@@ -8,10 +8,16 @@ package slr.contr;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.CallableStatement;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import slr.db2.*;
+import slr.lib.ICallback;
 
 /**
  *
@@ -33,18 +39,45 @@ public class ServletRespuesta extends HttpServlet {
         //response.setContentType("text/html;charset=UTF-8");
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        
+
         try {
             /* TODO output your page here. You may use following sample code. */
-            String pass = request.getParameter("password");
+            int entra = 0;
+            ICallback<CallableStatement> cb = new ICallback<CallableStatement>(){
+                    @Override
+                    public void exec(CallableStatement arg) {
+                    try {
+                        data.add(arg.getInt(1));
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ServletRespuesta.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    }
+
+            };
+            try (Dao<Usuario> dt = new Dao<>(new Conexion().conectar())){
+            String[] args = {"sip", "myLogin", "myPass"}, types = {"Integer Out", "Varchar2 In", "Varchar2 In"}, vals = {null, request.getParameter("nombre"), request.getParameter("pass")};
+            System.out.println("Prueba...");
+            dt.Proc("autenticar_usuario", args, types, vals, cb);
+            entra = (int) cb.data.get(0);
+            } catch (Exception ee){
+                System.out.println("Algo anda muy mal...");
+                System.out.println(ee.getMessage());
+                for(StackTraceElement i: ee.getStackTrace()){
+                    System.out.println(i);
+                }
+            }
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet</title>");            
+            out.println("<title>Servlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>YA!</h1> estas adentro " + request.getParameter("nombre") + "!<br>");
-            out.println("Checate esta: vienes desde " + request.getRemoteAddr());
+            if(entra == 1){
+                out.println("<h1>YA!</h1> estas adentro " + request.getParameter("nombre") + "!<br>");
+                out.println("Checate esta: vienes desde " + request.getRemoteAddr());
+            } else {
+                out.println("NO entras chavo");
+            }
             out.println("</body>");
             out.println("</html>");
         } finally {
