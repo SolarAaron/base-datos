@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package slr.db2;
+package slr.lib.db2;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,9 +17,9 @@ import java.sql.SQLException;
 public class Conexion {
     private String usr, pas;
 
-    public Conexion(){
-        usr= "*****";
-        pas= "******";
+    public Conexion(String user, String pass){
+        usr= user;
+        pas= pass;
     }
 
     public Connection conectar(){

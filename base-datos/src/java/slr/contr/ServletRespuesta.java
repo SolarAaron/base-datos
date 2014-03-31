@@ -16,8 +16,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import slr.db2.*;
 import slr.lib.ICallback;
+import slr.lib.db2.Conexion;
+import slr.lib.db2.Dao;
+import slr.lib.db2.Usuario;
 
 /**
  *
@@ -38,50 +40,54 @@ public class ServletRespuesta extends HttpServlet {
             throws ServletException, IOException {
         //response.setContentType("text/html;charset=UTF-8");
         response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
 
-        try {
+        try (PrintWriter out = response.getWriter()){
             /* TODO output your page here. You may use following sample code. */
-            int entra = 0;
+            int entra;
             ICallback<CallableStatement> cb = new ICallback<CallableStatement>(){
-                    @Override
-                    public void exec(CallableStatement arg) {
+                @Override
+                public void exec(CallableStatement arg) {
                     try {
                         data.add(arg.getInt(1));
                     } catch (SQLException ex) {
                         Logger.getLogger(ServletRespuesta.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    }
-
-            };
-            try (Dao<Usuario> dt = new Dao<>(new Conexion().conectar())){
-            String[] args = {"sip", "myLogin", "myPass"}, types = {"Integer Out", "Varchar2 In", "Varchar2 In"}, vals = {null, request.getParameter("nombre"), request.getParameter("pass")};
-            System.out.println("Prueba...");
-            dt.Proc("autenticar_usuario", args, types, vals, cb);
-            entra = (int) cb.data.get(0);
-            } catch (Exception ee){
-                System.out.println("Algo anda muy mal...");
-                System.out.println(ee.getMessage());
-                for(StackTraceElement i: ee.getStackTrace()){
-                    System.out.println(i);
                 }
+            };
+            try (Dao<Usuario> dt = new Dao<>(new Conexion("*****", "*****").conectar(), "usuario_1", Usuario.class)){
+                String[] args = {"sip", "myLogin", "myPass"}, types = {"Integer Out", "Varchar2 In", "Varchar2 In"}, vals = {null, request.getParameter("nombre"), request.getParameter("pass")};
+                System.out.println("Prueba...");
+                dt.Proc("autenticar_usuario", args, types, vals, cb);
+                entra = (int) cb.data.get(0);
+                dt.qry(null);
+
+                out.println("<!DOCTYPE html>");
+                out.println("<html>");
+                out.println("<head>");
+                out.println("<title>Entrada basica</title>");
+                out.println("<link href=\"css/cascade.css\" type=\"text/css\" rel=\"stylesheet\">");
+                out.println("</head>");
+                out.println("<body>");
+                if(entra == 1){
+                    out.println("<h1>YA!</h1> Estas adentro " + request.getParameter("nombre") + "!<br>");
+                    out.println("Checate esta: vienes desde " + request.getRemoteAddr());
+                    out.println("<br><br>Por ser tu te muestro los usuarios registrados pero shhhh!!!");
+                    out.println("<br>Tenemos " + dt.data.size() + " usuarios:<br>");
+                    for(Usuario i: dt.data){
+                        out.println(i.get("Login") + "<br>");
+                    }
+                } else {
+                    out.println("NO entras chavo");
+                }
+                out.println("</body>");
+                out.println("</html>");
             }
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet</title>");
-            out.println("</head>");
-            out.println("<body>");
-            if(entra == 1){
-                out.println("<h1>YA!</h1> estas adentro " + request.getParameter("nombre") + "!<br>");
-                out.println("Checate esta: vienes desde " + request.getRemoteAddr());
-            } else {
-                out.println("NO entras chavo");
+        } catch (Exception ee){
+            System.out.println("Algo anda muy mal...");
+            System.out.println(ee.getMessage());
+            for(StackTraceElement i: ee.getStackTrace()){
+                System.out.println(i);
             }
-            out.println("</body>");
-            out.println("</html>");
-        } finally {
-            out.close();
         }
     }
 
