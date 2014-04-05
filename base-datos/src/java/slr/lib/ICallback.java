@@ -4,7 +4,7 @@
  */
 package slr.lib;
 
-import java.util.ArrayList;
+import java.util.TreeMap;
 
 /**
  *
@@ -13,9 +13,9 @@ import java.util.ArrayList;
 public abstract class ICallback<T> {
     public abstract void exec(T arg);
 
-    public ArrayList<Object> data;
+    public TreeMap<String, Object> data;
 
     public ICallback(){
-        data = new ArrayList<>();
+        data = new TreeMap<>();
     }
 }

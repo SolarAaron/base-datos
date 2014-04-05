@@ -15,6 +15,10 @@ public class Usuario extends Pod{
         super(campos);
     }
 
+    Usuario(String[] args){
+        super(campos, args);
+    }
+
     @Override
     public String[] columns(){
         return campos;

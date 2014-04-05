@@ -27,6 +27,13 @@ public class Pod {
         }
     }
 
+    public Pod(String[] cols, String[] args){
+        data = new TreeMap<>();
+        for(int i = 0; i < cols.length; i++){
+            data.put(cols[i], args[i]);
+        }
+    }
+
     protected Pod(Pod other){
         data = new TreeMap<>();
         for(String i: other.data.keySet()){

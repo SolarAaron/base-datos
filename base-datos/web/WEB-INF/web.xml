@@ -8,6 +8,10 @@
         <servlet-name>ServletResp2</servlet-name>
         <servlet-class>slr.contr.ServletResp2</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Segundo</servlet-name>
+        <servlet-class>slr.contr.ServletInsercion</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Talkie</servlet-name>
         <url-pattern>/primero.php</url-pattern>
@@ -15,6 +19,10 @@
     <servlet-mapping>
         <servlet-name>ServletResp2</servlet-name>
         <url-pattern>/ServletResp2</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Segundo</servlet-name>
+        <url-pattern>/insertar.php</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

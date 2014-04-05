@@ -16,7 +16,7 @@ import slr.lib.ICallback;
 
 /**
  *
- * @author T201
+ * @author aaron
  * @param <T> tipo Pod
  */
 public class Dao<T extends Pod> implements AutoCloseable {
