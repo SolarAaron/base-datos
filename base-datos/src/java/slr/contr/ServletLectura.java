@@ -52,6 +52,7 @@ public class ServletLectura extends HttpServlet {
                     }
                 }
             };
+
             try (Dao<Usuario> dt = new Dao<>(new Conexion("*****", "*****").conectar(), "usuario_1", Usuario.class)){
                 String[] args = {"sip", "myLogin", "myPass"}, types = {"Integer Out", "Varchar2 In", "Varchar2 In"}, vals = {null, request.getParameter("nombre"), request.getParameter("pass")};
                 System.out.println("Prueba...");
@@ -80,6 +81,7 @@ public class ServletLectura extends HttpServlet {
                     out.println("<i>Oye oye tranquilo estas usando GET</i>");
                 }
             }
+
         } catch (Exception ee){
             System.out.println("Algo anda muy mal...");
             System.out.println(ee.getMessage());

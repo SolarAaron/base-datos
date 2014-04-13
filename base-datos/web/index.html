@@ -1,110 +1,85 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="utf-8">
-<title>jQuery Mobile Web App</title>
-<link href="css/jquery.mobile-1.0.min.css" rel="stylesheet" type="text/css"/>
-<script src="jscript/jquery-1.6.4.min.js" type="text/javascript"></script>
-<script src="jscript/jquery.mobile-1.0.min.js" type="text/javascript"></script>
-<script language="javascript">
-    $(document).ready(function(e){
-        $("#conectarse").click(function(){
-            $.ajax({
-                url:'/base-datos/util/login.php',
-                type:'POST',
-                data:{
-                    nombre:$("#login").val(),
-                    pass:$("#password").val()
-                },
-                success:function(datos){
-                    $("#resultado").html(datos).trigger("create");
-                    $("#insertar").click(function(){
-                        $.ajax({
-                            url:'/base-datos/util/insert.php',
-                            type:'POST',
-                            data:{
-                                login:$("#nombre").val(),
-                                pase:$("#pwd").val()
-                            },
-                            success:function(dt){
-                                $("#inserciones").html($("#inserciones").html() + dt);
-                            },
-                            failure:function(){
-                                alert("Algo anda mal...");
-                            }
-                        });
+    <head>
+        <meta charset="utf-8">
+        <title>Pruebas</title>
+        <link href="css/jquery.mobile-1.0.min.css" rel="stylesheet" type="text/css"/>
+        <script src="jscript/jquery-1.6.4.min.js" type="text/javascript"></script>
+        <script src="jscript/jquery.mobile-1.0.min.js" type="text/javascript"></script>
+        <script language="javascript">
+            $(document).ready(function(e){
+                $("#conectarse").click(function(){
+                    $.ajax({
+                        url:'/base-datos/util/login.php',
+                        type:'POST',
+                        data:{
+                            nombre:$("#login").val(),
+                            pass:$("#password").val()
+                        },
+                        success:function(datos){
+
+                            $("#resultado").html(datos).trigger("create");
+                            $("#insertar").click(function(){
+                                $.ajax({
+                                    url:'/base-datos/util/insert.php',
+                                    type:'POST',
+                                    data:{
+                                        login:$("#nombre").val(),
+                                        pase:$("#pwd").val()
+                                    },
+                                    success:function(dt){
+                                        $("#inserciones").html($("#inserciones").html() + dt).trigger("create");
+                                    },
+                                    failure:function(){
+                                        alert("Algo anda mal...");
+                                    }
+                                });
+                            });
+                        },
+                        failure:function(){
+                            alert("Algo anda mal...");
+                        }
                     });
-                },
-                failure:function(){
-                    alert("Algo anda mal...");
-                }
+                });
             });
-        });
-    });
-</script>
-</head>
-<body>
+        </script>
+    </head>
+    <body>
 
-<div data-role="page" id="page">
-    <div data-role="header">
-        <h1>Page One</h1>
-    </div>
-    <div data-role="content">
-        <ul data-role="listview">
-            <li><a href="#page2">Page Two</a></li>
-            <li><a href="#page3">Page Three</a></li>
-            <li><a href="#page4">Page Four</a></li>
-        </ul>
-    </div>
-    <div data-role="footer">
-        <h4>Page Footer</h4>
-    </div>
-</div>
-
-<div data-role="page" id="page2">
-    <div data-role="header">
-        <h1>Autenticar</h1>
-    </div>
-    <div data-role="content">
-            <div data-role="fieldcontain">
-                <label for="textinput">Login:</label>
-                <input type="text" name="textinput" id="login" value="" /><br>
+        <div data-role="page" id="page">
+            <div data-role="header">
+                <h1>Autenticar</h1>
             </div>
-            <div data-role="fieldcontain">
-                <label for="passinput">Password:</label>
-                <input type="password" name="passinput" id="password" value="" />
+            <div data-role="content">
+                <div data-role="fieldcontain">
+                    <label for="textinput">Login:</label>
+                    <input type="text" name="textinput" id="login" value="" /><br>
+                </div>
+                <div data-role="fieldcontain">
+                    <label for="passinput">Password:</label>
+                    <input type="password" name="passinput" id="password" value="" />
+                </div>
+                <ul data-role="listview">
+                    <li><a href="#res" id="conectarse" data-role="button" data-icon="home">Conectar</a></li>
+                </ul>
             </div>
-            <a id="conectarse" data-role="button" data-icon="home">Conectar</a>
-            <div id="resultado"></div>
-    </div>
-    <div data-role="footer" data-position="fixed">
-        <h4>Page Footer</h4>
-    </div>
-</div>
+            <div data-role="footer" data-position="fixed">
+                <h4>Page Footer</h4>
+            </div>
+        </div>
+        <div data-role="page" id="res">
+            <div data-role="header">
+                <h1>Sistema</h1>
+            </div>
+            <div data-role="content">
+                <div id="resultado"></div>
+            </div>
+            <div data-role="footer" data-position="fixed" align="center">
+                <ul data-role="listview">
+                    <li><a href="#page">Regresar</a></li>
+                </ul>
+            </div>
+        </div>
 
-<div data-role="page" id="page3">
-    <div data-role="header">
-        <h1>Page Three</h1>
-    </div>
-    <div data-role="content">
-        Content
-    </div>
-    <div data-role="footer">
-        <h4>Page Footer</h4>
-    </div>
-</div>
-
-<div data-role="page" id="page4">
-    <div data-role="header">
-        <h1>Page Four</h1>
-    </div>
-    <div data-role="content">
-        Content
-    </div>
-    <div data-role="footer">
-        <h4>Page Footer</h4>
-    </div>
-</div>
-
-</body>
+    </body>
 </html>
