@@ -40,6 +40,10 @@ public class Conexion {
                     url = "jdbc:microsoft:sqlserver://" + server + ";DatabaseName=" + dab;
                     Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
                     break;
+                case ODBC:
+                    url = "jdbc:odbc:" + dab;
+                    Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+                    break;
             }
             ret = DriverManager.getConnection(url, usr, pas);
         } catch(ClassNotFoundException | SQLException ee){
