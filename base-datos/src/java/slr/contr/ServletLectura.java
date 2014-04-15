@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import slr.lib.ICallback;
 import slr.lib.db2.Conexion;
+import slr.lib.db2.DBType;
 import slr.lib.db2.Dao;
 import slr.lib.db2.Usuario;
 
@@ -53,7 +54,7 @@ public class ServletLectura extends HttpServlet {
                 }
             };
 
-            try (Dao<Usuario> dt = new Dao<>(new Conexion("*****", "*****").conectar(), "usuario_1", Usuario.class)){
+            try (Dao<Usuario> dt = new Dao<>(new Conexion("*****", "*****", null).conectar(DBType.ORATHIN, "localhost:1521"), "usuario_1", Usuario.class)){
                 String[] args = {"sip", "myLogin", "myPass"}, types = {"Integer Out", "Varchar2 In", "Varchar2 In"}, vals = {null, request.getParameter("nombre"), request.getParameter("pass")};
                 System.out.println("Prueba...");
                 dt.Proc("autenticar_usuario", args, types, vals, cb);
