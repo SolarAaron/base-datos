@@ -2,6 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package slr.contr;
 
 import java.io.IOException;
@@ -14,17 +15,16 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import slr.db2.Conector;
+import slr.db2.Usuario;
 import slr.lib.ICallback;
-import slr.lib.db2.Conexion;
-import slr.lib.db2.DBType;
 import slr.lib.db2.Dao;
-import slr.lib.db2.Usuario;
 
 /**
  *
  * @author aaron
  */
-public class ServletLectura extends HttpServlet {
+public class ServletLectura extends HttpServlet{
 
     /**
      * Processes requests for both HTTP
@@ -33,32 +33,33 @@ public class ServletLectura extends HttpServlet {
      *
      * @param request servlet request
      * @param response servlet response
+     *
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response, int method)
-            throws ServletException, IOException {
+        throws ServletException, IOException{
         Double ps, al, res;
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+        try(PrintWriter out = response.getWriter()){
 
             int entra;
             ICallback<CallableStatement> cb = new ICallback<CallableStatement>(){
                 @Override
-                public void exec(CallableStatement arg) {
-                    try {
+                public void exec(CallableStatement arg){
+                    try{
                         data.put("entra", arg.getInt(1));
-                    } catch (SQLException ex) {
+                    } catch(SQLException ex){
                         Logger.getLogger(ServletLectura.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             };
 
-            try (Dao<Usuario> dt = new Dao<>(new Conexion("*****", "*****", null).conectar(DBType.ORATHIN, "localhost:1521"), "usuario_1", Usuario.class)){
+            try(Dao<Usuario> dt = new Dao<>(Conector.conectar(), "usuario_1", Usuario.class)){
                 String[] args = {"sip", "myLogin", "myPass"}, types = {"Integer Out", "Varchar2 In", "Varchar2 In"}, vals = {null, request.getParameter("nombre"), request.getParameter("pass")};
                 System.out.println("Prueba...");
                 dt.Proc("autenticar_usuario", args, types, vals, cb);
-                entra = (int) cb.data.get("entra");
+                entra = (int)cb.data.get("entra");
                 dt.qry(null);
                 if(method == 1){
                     if(entra == 1){
@@ -73,7 +74,7 @@ public class ServletLectura extends HttpServlet {
                         out.println("<br>Insertar usuarios:<br>");
                         out.println("<label for:=\"nuinput\">Login:</label><input type=\"text\" name=\"nuinput\" id=\"nombre\"/>");
                         out.println("<label for:=\"npinput\">Password:</label><input type=\"password\" name=\"npinput\" id=\"pwd\"/>");
-                        out.println("<a id=\"insertar\" data-role=\"button\">Insertar</a>");
+                        out.println("<a id=\"insertar\" class=\"ui-btn ui-icon-edit ui-btn-icon-left\">Insertar</a>");
                         out.println("</p>");
                     } else {
                         out.println("<b>NO entras chavo</b>");
@@ -83,7 +84,7 @@ public class ServletLectura extends HttpServlet {
                 }
             }
 
-        } catch (Exception ee){
+        } catch(Exception ee){
             System.out.println("Algo anda muy mal...");
             System.out.println(ee.getMessage());
             for(StackTraceElement i: ee.getStackTrace()){
@@ -99,12 +100,13 @@ public class ServletLectura extends HttpServlet {
      *
      * @param request servlet request
      * @param response servlet response
+     *
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+        throws ServletException, IOException{
         processRequest(request, response, 0);
     }
 
@@ -114,12 +116,13 @@ public class ServletLectura extends HttpServlet {
      *
      * @param request servlet request
      * @param response servlet response
+     *
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+        throws ServletException, IOException{
         processRequest(request, response, 1);
     }
 
@@ -129,7 +132,7 @@ public class ServletLectura extends HttpServlet {
      * @return a String containing servlet description
      */
     @Override
-    public String getServletInfo() {
+    public String getServletInfo(){
         return "Short description";
     }// </editor-fold>
 }

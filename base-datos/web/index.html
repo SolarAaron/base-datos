@@ -12,33 +12,33 @@
             $(document).ready(function(e){
                 $("#conectarse").click(function(){
                     $.ajax({
-                        url:'/base-datos/util/login.php',
-                        type:'POST',
-                        data:{
-                            nombre:$("#login").val(),
-                            pass:$("#password").val()
+                        url: '/base-datos/util/login.php',
+                        type: 'POST',
+                        data: {
+                            nombre: $("#login").val(),
+                            pass: $("#password").val()
                         },
-                        success:function(datos){
+                        success: function(datos){
 
                             $("#resultado").html(datos).trigger("create");
                             $("#insertar").click(function(){
                                 $.ajax({
-                                    url:'/base-datos/util/insert.php',
-                                    type:'POST',
-                                    data:{
-                                        login:$("#nombre").val(),
-                                        pase:$("#pwd").val()
+                                    url: '/base-datos/util/insert.php',
+                                    type: 'POST',
+                                    data: {
+                                        login: $("#nombre").val(),
+                                        pase: $("#pwd").val()
                                     },
-                                    success:function(dt){
+                                    success: function(dt){
                                         $("#inserciones").html($("#inserciones").html() + dt).trigger("create");
                                     },
-                                    failure:function(){
+                                    failure: function(){
                                         alert("Algo anda mal...");
                                     }
                                 });
                             });
                         },
-                        failure:function(){
+                        failure: function(){
                             alert("Algo anda mal...");
                         }
                     });
@@ -46,8 +46,7 @@
             });
         </script>
     </head>
-    <body>
-
+    <body class="ui-alt-icon">
         <div data-role="page" id="page" align="center">
             <div data-role="header">
                 <h1>Autenticar</h1>
@@ -57,14 +56,14 @@
                     <label for="textinput">Login:</label>
                     <input type="text" name="textinput" id="login" value="" /><br>
                     <label for="passinput">Password:</label>
-                    <input type="password" name="passinput" id="password" value="" />
-              </div>
+                    <input type="password" name="passinput" id="password" value="" /><br>
+                </div>
                 <ul data-role="listview">
-                    <li><a href="#res" id="conectarse" data-role="button" data-icon="home">Conectar</a></li>
+                    <li><a href="#res" id="conectarse" class="ui-btn ui-btn-icon-left ui-icon-user">Conectar</a></li>
                 </ul>
-          </div>
+            </div>
             <div data-role="footer" data-position="fixed">
-                <h4>Page Footer</h4>
+                <h4>Sistema X</h4>
             </div>
         </div>
         <div data-role="page" id="res">
@@ -76,7 +75,7 @@
             </div>
             <div data-role="footer" data-position="fixed" align="center">
                 <ul data-role="listview">
-                    <li><a href="#page">Regresar</a></li>
+                    <li><a href="#page" class="ui-btn ui-btn-icon-left ui-icon-back ui-btn-b">Regresar</a></li>
                 </ul>
             </div>
         </div>

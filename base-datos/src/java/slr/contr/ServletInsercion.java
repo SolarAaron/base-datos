@@ -2,6 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package slr.contr;
 
 import java.io.IOException;
@@ -14,17 +15,16 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import slr.db2.Conector;
+import slr.db2.Usuario;
 import slr.lib.ICallback;
-import slr.lib.db2.Conexion;
-import slr.lib.db2.DBType;
 import slr.lib.db2.Dao;
-import slr.lib.db2.Usuario;
 
 /**
  *
  * @author aaron
  */
-public class ServletInsercion extends HttpServlet {
+public class ServletInsercion extends HttpServlet{
 
     /**
      * Processes requests for both HTTP
@@ -33,36 +33,37 @@ public class ServletInsercion extends HttpServlet {
      *
      * @param request servlet request
      * @param response servlet response
+     *
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response, int method)
-            throws ServletException, IOException {
+        throws ServletException, IOException{
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+        try(PrintWriter out = response.getWriter()){
             int nId;
-            ICallback<CallableStatement> cb = new ICallback<CallableStatement>() {
+            ICallback<CallableStatement> cb = new ICallback<CallableStatement>(){
 
                 @Override
-                public void exec(CallableStatement arg) {
+                public void exec(CallableStatement arg){
                     try{
                         data.put("nuevo", arg.getInt(1));
-                    } catch (SQLException err){
+                        data.put("usuario", arg.getString(2));
+                    } catch(SQLException err){
                         Logger.getLogger(ServletInsercion.class.getName()).log(Level.SEVERE, null, err);
                     }
                 }
             };
-            try (Dao<Usuario> dt = new Dao<>(new Conexion("*****", "*****", null).conectar(DBType.ORATHIN, "localhost:1521"), "usuario_1", Usuario.class)){
-                String[] args = {"sip", "myLogin", "myPass"}, types = {"Integer Out", "Varchar2 In", "Varchar2 In"}, vals = {null, request.getParameter("login"), request.getParameter("pase")};
-                dt.Proc("crear_usuario", args, types, vals, cb);
-                nId = (int) cb.data.get("nuevo");
-
+            try(Dao<Usuario> dt = new Dao<>(Conector.conectar(), "usuario_1", Usuario.class)){
                 if(method == 0){
                     out.println("<b>Insertar con GET? Que locura!!</b><br>");
                 } else {
-                    out.println("Insertado: " + vals[1] + "<br>");
+                    String[] args = {"sip", "myLogin", "myPass"}, types = {"Integer Out", "Varchar2 In", "Varchar2 In"}, vals = {null, request.getParameter("login"), request.getParameter("pase")};
+                    dt.Proc("crear_usuario", args, types, vals, cb);
+                    nId = (int)cb.data.get("nuevo");
+                    out.println("Insertado: " + cb.data.get("usuario") + "<br>");
                 }
-            } catch (SQLException ee){
+            } catch(SQLException ee){
                 if(method == 0){
                     out.println("<b>Insertar con GET? Que locura!!</b><br>");
                 } else {
@@ -85,12 +86,13 @@ public class ServletInsercion extends HttpServlet {
      *
      * @param request servlet request
      * @param response servlet response
+     *
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+        throws ServletException, IOException{
         processRequest(request, response, 0);
     }
 
@@ -100,12 +102,13 @@ public class ServletInsercion extends HttpServlet {
      *
      * @param request servlet request
      * @param response servlet response
+     *
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+        throws ServletException, IOException{
         processRequest(request, response, 1);
     }
 
@@ -115,7 +118,7 @@ public class ServletInsercion extends HttpServlet {
      * @return a String containing servlet description
      */
     @Override
-    public String getServletInfo() {
+    public String getServletInfo(){
         return "Short description";
     }// </editor-fold>
 }
