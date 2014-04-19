@@ -2,9 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package slr.db2;
+package slr.db2.model;
 
-import slr.lib.db2.Pod;
+import slr.db2.lib.Pod;
 
 /**
  *

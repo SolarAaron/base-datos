@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package slr.lib.db2;
+package slr.db2.lib;
 
 /**
  *

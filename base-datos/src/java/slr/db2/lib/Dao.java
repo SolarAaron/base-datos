@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package slr.lib.db2;
+package slr.db2.lib;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -35,7 +35,7 @@ public class Dao<T extends Pod> implements AutoCloseable {
         clcon = type;
     }
 
-    public void qry(String filter){
+    public void Query(String filter){
         String[] cols;
         String spec = "";
         ResultSet res;
@@ -65,7 +65,7 @@ public class Dao<T extends Pod> implements AutoCloseable {
     }
 
 
-    public void Proc(String proc, String[] args, String[] types, Object[] vals, CallbackWrapper<CallableStatement> cbck) throws SQLException{ // arg type := val -- pad with null
+    public void Procedure(String proc, String[] args, String[] types, Object[] vals, CallbackWrapper<CallableStatement> cbck) throws SQLException{ // arg type := val -- pad with null
         String argTemp = "";
         for(int i = 0; i < args.length; i++){
             if(i == 0){

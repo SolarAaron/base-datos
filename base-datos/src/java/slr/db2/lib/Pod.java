@@ -4,13 +4,13 @@
  * and open the template in the editor.
  */
 
-package slr.lib.db2;
+package slr.db2.lib;
 
 import java.util.TreeMap;
 
 /**
  *
- * @author T201
+ * @author aaron
  */
 public class Pod {
     private TreeMap<String, Object> data;

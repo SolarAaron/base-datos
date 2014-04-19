@@ -7,8 +7,8 @@
 package slr.db2;
 
 import java.sql.Connection;
-import slr.lib.db2.Conexion;
-import slr.lib.db2.DBType;
+import slr.db2.lib.Conexion;
+import slr.db2.lib.DBType;
 
 /**
  *

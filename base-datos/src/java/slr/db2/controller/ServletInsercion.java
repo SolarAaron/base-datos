@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package slr.controller;
+package slr.db2.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,15 +16,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import slr.db2.Conector;
-import slr.db2.Usuario;
+import slr.db2.model.Usuario;
 import slr.lib.CallbackWrapper;
-import slr.lib.db2.Dao;
+import slr.db2.lib.Dao;
 
 /**
  *
  * @author aaron
  */
-public class ServletLectura extends HttpServlet{
+public class ServletInsercion extends HttpServlet{
 
     /**
      * Processes requests for both HTTP
@@ -39,51 +39,37 @@ public class ServletLectura extends HttpServlet{
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response, int method)
         throws ServletException, IOException{
-        Double ps, al, res;
         response.setContentType("text/html;charset=UTF-8");
         try(PrintWriter out = response.getWriter()){
-
-            int entra;
+            int nId;
             CallbackWrapper<CallableStatement> cb = new CallbackWrapper<CallableStatement>(){
+
                 @Override
                 public void exec(CallableStatement arg){
                     try{
-                        data.put("entra", arg.getInt(1));
-                    } catch(SQLException ex){
-                        Logger.getLogger(ServletLectura.class.getName()).log(Level.SEVERE, null, ex);
+                        data.put("nuevo", arg.getInt(1));
+                        data.put("usuario", arg.getString(2));
+                    } catch(SQLException err){
+                        Logger.getLogger(ServletInsercion.class.getName()).log(Level.SEVERE, null, err);
                     }
                 }
             };
-
             try(Dao<Usuario> dt = new Dao<>(Conector.conectar(), "usuario_1", Usuario.class)){
-                String[] args = {"sip", "myLogin", "myPass"}, types = {"Integer Out", "Varchar2 In", "Varchar2 In"}, vals = {null, request.getParameter("nombre"), request.getParameter("pass")};
-                System.out.println("Prueba...");
-                dt.Proc("autenticar_usuario", args, types, vals, cb);
-                entra = (int)cb.data.get("entra");
-                dt.qry(null);
-                if(method == 1){
-                    if(entra == 1){
-                        out.println("<p>");
-                        out.println("<b>YA!</b> Estas adentro " + request.getParameter("nombre") + "!<br>");
-                        out.println("Vienes desde " + request.getRemoteAddr());
-                        out.println("<br>Tenemos " + dt.data.size() + " usuarios:<br>");
-                        for(Usuario i: dt.data){
-                            out.println(i.get("Login") + "<br>");
-                        }
-                        out.println("<div id=\"inserciones\"></div>");
-                        out.println("<br>Insertar usuarios:<br>");
-                        out.println("<label for:=\"nuinput\">Login:</label><input type=\"text\" name=\"nuinput\" id=\"nombre\"/>");
-                        out.println("<label for:=\"npinput\">Password:</label><input type=\"password\" name=\"npinput\" id=\"pwd\"/>");
-                        out.println("<a id=\"insertar\" class=\"ui-btn ui-icon-edit ui-btn-icon-left\">Insertar</a>");
-                        out.println("</p>");
-                    } else {
-                        out.println("<b>NO entras chavo</b>");
-                    }
+                if(method == 0){
+                    out.println("<b>Insertar con GET? Que locura!!</b><br>");
                 } else {
-                    out.println("<i>Oye oye tranquilo estas usando GET</i>");
+                    String[] args = {"sip", "myLogin", "myPass"}, types = {"Integer Out", "Varchar2 In", "Varchar2 In"}, vals = {null, request.getParameter("login"), request.getParameter("pase")};
+                    dt.Procedure("crear_usuario", args, types, vals, cb);
+                    nId = (int)cb.data.get("nuevo");
+                    out.println("Insertado: " + cb.data.get("usuario") + "<br>");
+                }
+            } catch(SQLException ee){
+                if(method == 0){
+                    out.println("<b>Insertar con GET? Que locura!!</b><br>");
+                } else {
+                    out.println("<b>No insertado: " + ee.getMessage() + "</b><br>");
                 }
             }
-
         } catch(Exception ee){
             System.out.println("Algo anda muy mal...");
             System.out.println(ee.getMessage());
