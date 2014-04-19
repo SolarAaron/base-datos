@@ -34,12 +34,13 @@ public class ServletDispatcher extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-                    try {
-                        IServletExtension ext = (IServletExtension) Class.forName("slr.db2.controller." + request.getParameter("servlet")).newInstance();
-                        ext.procesar(request, response, method, out);
-                    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-                        Logger.getLogger(ServletDispatcher.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+            System.err.println("Entrando a servlet");
+            try {
+                IServletExtension ext = (IServletExtension) Class.forName("slr.db2.controller." + request.getParameter("servlet")).newInstance();
+                ext.procesar(request, response, method, out);
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+                Logger.getLogger(ServletDispatcher.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 

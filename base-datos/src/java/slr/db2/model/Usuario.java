@@ -11,7 +11,7 @@ import slr.db2.lib.Pod;
  * @author aaron
  */
 public class Usuario extends Pod{
-    private static final String[] campos = {"Id", "Login", "Password"};
+    private static final String[] campos = {"Id", "Login", "Password", "Llave_sec"};
 
     public Usuario(){
         super(campos);

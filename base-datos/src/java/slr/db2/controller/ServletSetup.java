@@ -2,31 +2,28 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package slr.db2.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.security.SecureRandom;
 import java.sql.CallableStatement;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import slr.db2.Conector;
+import slr.db2.lib.Dao;
 import slr.db2.model.Usuario;
 import slr.lib.CallbackWrapper;
-import slr.db2.lib.Dao;
 import slr.lib.HashProcessor;
 
 /**
  *
  * @author aaron
  */
-public class ServletInsercion implements IServletExtension{
+public class ServletSetup implements IServletExtension{
 
     /**
      * Processes requests for both HTTP
@@ -53,21 +50,23 @@ public class ServletInsercion implements IServletExtension{
                     }
                 }
             };
+            System.err.println("Entrando a setup");
             try(Dao<Usuario> dt = new Dao<>(Conector.conectar(), "usuario_1", Usuario.class)){
                 if(method == 0){
-                    out.println("<b>Insertar con GET? Que locura!!</b><br>");
+                    out.println("Insertar con GET? Que locura!!");
                 } else {
                     String sal = HashProcessor.generateSalt(20);
-                    String[] args = {"sip", "myLogin", "myPass", "mySal"}, types = {"Integer Out", "Varchar2 In", "Char2 In", "Char2 In"}, vals = {null, request.getParameter("login"), HashProcessor.hash(request.getParameter("pase") + sal, "SHA-256"), sal};
+                    String[] args = {"sip", "myLogin", "myPass", "mySal"}, types = {"Integer Out", "Varchar2 In", "Char2 In", "Char2 In"}, vals = {null, "Administrator", HashProcessor.hash("admin" + sal, "SHA-256"), sal};
                     dt.Procedure("crear_ux", args, types, vals, cb);
                     nId = (int)cb.data.get("nuevo");
-                    out.println("Insertado: " + vals[1] + "<br>");
+                    out.println("Insertado: " + vals[1]);
                 }
             } catch(Exception ee){
                 if(method == 0){
-                    out.println("<b>Insertar con GET? Que locura!!</b><br>");
+                    out.println("Insertar con GET? Que locura!!");
                 } else {
-                    out.println("<b>No insertado: " + ee.getMessage() + "</b><br>");
+                    out.println("No insertado: Administrator");
+                    System.err.println(ee.getMessage());
                 }
             }
     }
