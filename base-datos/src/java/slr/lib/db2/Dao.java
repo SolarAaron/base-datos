@@ -12,7 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
-import slr.lib.ICallback;
+import slr.lib.CallbackWrapper;
 
 /**
  *
@@ -65,7 +65,7 @@ public class Dao<T extends Pod> implements AutoCloseable {
     }
 
 
-    public void Proc(String proc, String[] args, String[] types, Object[] vals, ICallback<CallableStatement> cbck) throws SQLException{ // arg type := val -- pad with null
+    public void Proc(String proc, String[] args, String[] types, Object[] vals, CallbackWrapper<CallableStatement> cbck) throws SQLException{ // arg type := val -- pad with null
         String argTemp = "";
         for(int i = 0; i < args.length; i++){
             if(i == 0){

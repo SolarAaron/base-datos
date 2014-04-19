@@ -10,12 +10,12 @@ import java.util.TreeMap;
  *
  * @author aaron
  */
-public abstract class ICallback<T> {
+public abstract class CallbackWrapper<T> {
     public abstract void exec(T arg);
 
     public TreeMap<String, Object> data;
 
-    public ICallback(){
+    public CallbackWrapper(){
         data = new TreeMap<>();
     }
 }
