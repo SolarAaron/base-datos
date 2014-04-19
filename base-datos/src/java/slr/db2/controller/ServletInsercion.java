@@ -24,7 +24,7 @@ import slr.db2.lib.Dao;
  *
  * @author aaron
  */
-public class ServletInsercion extends HttpServlet{
+public class ServletInsercion implements IServletExtension{
 
     /**
      * Processes requests for both HTTP
@@ -37,13 +37,11 @@ public class ServletInsercion extends HttpServlet{
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response, int method)
+    @Override
+    public void procesar(HttpServletRequest request, HttpServletResponse response, int method, PrintWriter out)
         throws ServletException, IOException{
-        response.setContentType("text/html;charset=UTF-8");
-        try(PrintWriter out = response.getWriter()){
             int nId;
             CallbackWrapper<CallableStatement> cb = new CallbackWrapper<CallableStatement>(){
-
                 @Override
                 public void exec(CallableStatement arg){
                     try{
@@ -62,62 +60,12 @@ public class ServletInsercion extends HttpServlet{
                     nId = (int)cb.data.get("nuevo");
                     out.println("Insertado: " + vals[1] + "<br>");
                 }
-            } catch(SQLException ee){
+            } catch(Exception ee){
                 if(method == 0){
                     out.println("<b>Insertar con GET? Que locura!!</b><br>");
                 } else {
                     out.println("<b>No insertado: " + ee.getMessage() + "</b><br>");
                 }
             }
-        } catch(Exception ee){
-            System.out.println("Algo anda muy mal...");
-            System.out.println(ee.getMessage());
-            for(StackTraceElement i: ee.getStackTrace()){
-                System.out.println(i);
-            }
-        }
     }
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP
-     * <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     *
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException{
-        processRequest(request, response, 0);
-    }
-
-    /**
-     * Handles the HTTP
-     * <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     *
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException{
-        processRequest(request, response, 1);
-    }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo(){
-        return "Short description";
-    }// </editor-fold>
 }

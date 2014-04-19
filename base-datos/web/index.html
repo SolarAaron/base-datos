@@ -12,22 +12,24 @@
             $(document).ready(function(e){
                 $("#conectarse").click(function(){
                     $.ajax({
-                        url: '/base-datos/util/login.php',
+                        url: '/base-datos/util.php',
                         type: 'POST',
                         data: {
                             nombre: $("#login").val(),
-                            pass: $("#password").val()
+                            pass: $("#password").val(),
+                            servlet: 'ServletLectura'
                         },
                         success: function(datos){
 
                             $("#resultado").html(datos).trigger("create");
                             $("#insertar").click(function(){
                                 $.ajax({
-                                    url: '/base-datos/util/insert.php',
+                                    url: '/base-datos/util.php',
                                     type: 'POST',
                                     data: {
                                         login: $("#nombre").val(),
-                                        pase: $("#pwd").val()
+                                        pase: $("#pwd").val(),
+                                        servlet: 'ServletInsercion'
                                     },
                                     success: function(dt){
                                         $("#inserciones").html($("#inserciones").html() + dt).trigger("create");
