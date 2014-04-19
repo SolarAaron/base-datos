@@ -295,3 +295,11 @@ REFERENCES "CLINICA" ("ID_CLINICA")
 
 /
 
+CREATE OR REPLACE PROCEDURE reservar(id out integer,usuario in integer,especialidad in integer,doctor in integer,clinica in integer,fecha in TIMESTAMP)
+AS
+
+valor integer;
+BEGIN
+insert into reservacion(id_reservacion,usuario,especialidad,doctor,clinica,fecha)values(valor,usuario,especialidad,doctor,clinica,fecha);
+END;
+/
