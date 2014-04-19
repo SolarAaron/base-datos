@@ -16,9 +16,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import slr.db2.Conector;
+import slr.db2.lib.Dao;
 import slr.db2.model.Usuario;
 import slr.lib.CallbackWrapper;
-import slr.db2.lib.Dao;
 
 /**
  *
@@ -74,7 +74,7 @@ public class ServletLectura extends HttpServlet{
                         out.println("<br>Insertar usuarios:<br>");
                         out.println("<label for:=\"nuinput\">Login:</label><input type=\"text\" name=\"nuinput\" id=\"nombre\"/>");
                         out.println("<label for:=\"npinput\">Password:</label><input type=\"password\" name=\"npinput\" id=\"pwd\"/>");
-                        out.println("<a id=\"insertar\" class=\"ui-btn ui-icon-edit ui-btn-icon-left\">Insertar</a>");
+                        out.println("<a id=\"insertar\" class=\"ui-btn ui-icon-plus ui-btn-icon-left\">Insertar</a>");
                         out.println("</p>");
                     } else {
                         out.println("<b>NO entras chavo</b>");

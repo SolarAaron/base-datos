@@ -48,7 +48,6 @@ public class ServletInsercion extends HttpServlet{
                 public void exec(CallableStatement arg){
                     try{
                         data.put("nuevo", arg.getInt(1));
-                        data.put("usuario", arg.getString(2));
                     } catch(SQLException err){
                         Logger.getLogger(ServletInsercion.class.getName()).log(Level.SEVERE, null, err);
                     }
@@ -61,7 +60,7 @@ public class ServletInsercion extends HttpServlet{
                     String[] args = {"sip", "myLogin", "myPass"}, types = {"Integer Out", "Varchar2 In", "Varchar2 In"}, vals = {null, request.getParameter("login"), request.getParameter("pase")};
                     dt.Procedure("crear_usuario", args, types, vals, cb);
                     nId = (int)cb.data.get("nuevo");
-                    out.println("Insertado: " + cb.data.get("usuario") + "<br>");
+                    out.println("Insertado: " + vals[1] + "<br>");
                 }
             } catch(SQLException ee){
                 if(method == 0){

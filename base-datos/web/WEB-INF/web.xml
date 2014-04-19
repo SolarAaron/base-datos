@@ -6,7 +6,7 @@
     </servlet>
     <servlet>
         <servlet-name>Servilleta</servlet-name>
-        <servlet-class>slr.contr.ServletLectura</servlet-class>
+        <servlet-class>slr.db2.controller.ServletLectura</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Walkie</servlet-name>
