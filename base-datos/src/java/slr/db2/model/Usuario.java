@@ -17,8 +17,12 @@ public class Usuario extends Pod{
         super(campos);
     }
 
-    public Usuario(String[] args){
-        super(campos, args);
+    public Usuario(int Id, String Login, String Password, String Llave_sec) throws Exception{
+        super(campos);
+        this.set("Id", Id);
+        this.set("Login", Login);
+        this.set("Password", Password);
+        this.set("Llave_sec", Llave_sec);
     }
 
     @Override
