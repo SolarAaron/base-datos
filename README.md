@@ -6,7 +6,7 @@ Tablas utilizadas
 		ID: integer
 		Login: varchar2(20)
 		Password: char2(64) -- Se guarda como sha-256 hexadecimal
-		Llave_sec: char2(20) --se guarda como hexadecimal
+		Llave_sec: char2(40) --se guarda como hexadecimal
 		
 		script:
 			create table usuario_x(Id integer, Login Varchar2(20), Password char(64), Llave_sec char(40), Constraint ux_pk Primary Key(Id));
