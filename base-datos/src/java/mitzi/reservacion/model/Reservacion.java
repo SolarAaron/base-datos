@@ -11,7 +11,7 @@ package mitzi.reservacion.model;
  * @author mario
  */
 public class Reservacion {
-   private int id;
+  private int id;
    private int id_usuario;
    private int id_especialidad;
    private int id_doctor;
@@ -26,7 +26,7 @@ public class Reservacion {
         this.id_clinica = id_clinica;
         this.fecha = fecha;
     }
-
+   
 
     public int getId() {
         return id;
@@ -75,6 +75,6 @@ public class Reservacion {
     public void setFecha(String fecha) {
         this.fecha = fecha;
     }
-
-
+   
+      
 }
