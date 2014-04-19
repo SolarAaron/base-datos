@@ -1,14 +1,14 @@
 Proyecto base-datos
 ==========
 
-Tablas utilizadas
+Tablas utilizadas:
+==========
 	usuario_x
 		ID: integer
 		Login: varchar2(20)
 		Password: char2(64) -- Se guarda como sha-256 hexadecimal
 		Llave_sec: char2(40) --se guarda como hexadecimal
 		
-		script:
 			create table usuario_x(Id integer, Login Varchar2(20), Password char(64), Llave_sec char(40), Constraint ux_pk Primary Key(Id));
 			create sequence ux_sec start with 1 increment by 1 nomaxvalue nocache order;
 			create or replace procedure crear_ux(myId Out integer, myLogin IN Varchar2, myPassword IN Char, mySalt IN Char) As
