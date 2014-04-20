@@ -6,6 +6,7 @@
 
 package mitzi.reservacion.model;
 
+import java.sql.Timestamp;
 import slr.db2.lib.Pod;
 
 /**
@@ -17,17 +18,17 @@ import slr.db2.lib.Pod;
  * import slr.db2.Conector;
  * import slr.db2.lib.Dao;
  *
- * Dao<Reservacion_pod> = new Dao<>(Conector.conectar(), "usuario_1", Usuario.class);
+ * Dao<Reservacion_pod> = new Dao<>(Conector.conectar(), "reservacion", Reservacion_pod.class);
  */
 public class Reservacion_pod extends Pod{
-   private final static String[] campos = {"id", "id_usuario", "id_especialidad", "id_doctor", "id_clinica", "fecha"};
+    private final static String[] campos = {"id", "id_usuario", "id_especialidad", "id_doctor", "id_clinica", "fecha"};
 
-   public Reservacion_pod(){
-       super(campos);
-   }
+    public Reservacion_pod(){
+        super(campos);
+    }
 
-   public Reservacion_pod(int id, int id_usuario, int id_especialidad, int id_doctor, int id_clinica, String fecha) throws Exception {
-       super(campos);
+    public Reservacion_pod(int id, int id_usuario, int id_especialidad, int id_doctor, int id_clinica, Timestamp fecha) throws Exception{
+        super(campos);
         this.set("id", id);
         this.set("id_usuario", id_usuario);
         this.set("id_especialidad", id_especialidad);
@@ -37,7 +38,7 @@ public class Reservacion_pod extends Pod{
     }
 
     @Override
-   public String[] columns(){
-       return campos;
-   }
+    public String[] columns(){
+        return campos;
+    }
 }

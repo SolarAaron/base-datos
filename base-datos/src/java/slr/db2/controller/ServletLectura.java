@@ -11,10 +11,8 @@ import java.sql.CallableStatement;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.security.MessageDigest;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -46,60 +44,60 @@ public class ServletLectura implements IServletExtension{
         throws ServletException, IOException{
         Double ps, al, res;
         response.setContentType("text/html;charset=UTF-8");
-            int entra;
-            CallbackWrapper<CallableStatement> cb = new CallbackWrapper<CallableStatement>(){
-                @Override
-                public void exec(CallableStatement arg){
-                    try{
-                        data.put("entra", arg.getInt(1));
-                    } catch(SQLException ex){
-                        Logger.getLogger(ServletLectura.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+        int entra;
+        CallbackWrapper<CallableStatement> cb = new CallbackWrapper<CallableStatement>(){
+            @Override
+            public void exec(CallableStatement arg){
+                try{
+                    data.put("entra", arg.getInt(1));
+                } catch(SQLException ex){
+                    Logger.getLogger(ServletLectura.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            };
-            try(Dao<Usuario> dt = new Dao<>(Conector.conectar(), "usuario_x", Usuario.class)){
-                dt.Query("Login = '" + request.getParameter("nombre") + "'");
-                if(dt.data.size() != 1){
-                    out.println("<p>");
-                    out.println("<b>No existe el usuario: " + request.getParameter("nombre") + "</b>");
-                    out.println("</p>");
-                } else {
-                    String[] args = {"sip", "myLogin", "myPass"}, types = {"Integer Out", "Varchar2 In", "Varchar2 In"}, vals = {null, request.getParameter("nombre"), HashProcessor.hash(request.getParameter("pass") + dt.data.get(0).get("Llave_sec"), "SHA-256")};
-                    System.out.println("Prueba...");
-                    dt.Procedure("autenticar_usuariox", args, types, vals, cb);
-                    entra = (int)cb.data.get("entra");
-                    dt.Query(null);
-                    if(method == 1){
-                        if(entra == 1){
-                            Cookie ckLog = new Cookie("Login", vals[1]);
-                            HttpSession ss = request.getSession();
-                            ss.setAttribute("usuario", vals[1]);
-                            ss.setMaxInactiveInterval(30 * 60);
-                            ckLog.setMaxAge(30 * 60);
-                            response.addCookie(ckLog);
-                            out.println("<p>");
-                            out.println("<b>YA!</b> Estas adentro " + request.getParameter("nombre") + "!<br>");
-                            out.println("Vienes desde " + request.getRemoteAddr());
-                            out.println("<br>Tenemos " + dt.data.size() + " usuarios:<br>");
-                            for(Usuario i: dt.data){
-                                out.println(i.get("Login") + "<br>");
-                            }
-                            out.println("<div id=\"inserciones\"></div>");
-                            out.println("<br>Insertar usuarios:<br>");
-                            out.println("<label for:=\"nuinput\">Login:</label><input type=\"text\" name=\"nuinput\" id=\"nombre\"/>");
-                            out.println("<label for:=\"npinput\">Password:</label><input type=\"password\" name=\"npinput\" id=\"pwd\"/>");
-                            out.println("<a id=\"insertar\" class=\"ui-btn ui-icon-plus ui-btn-icon-left\">Insertar</a>");
-                            out.println("</p>");
-                        } else {
-                            out.println("<b>Acceso denegado: password incorrecto</b>");
-                        }
-                    } else {
-                        out.println("<i>Oye oye tranquilo estas usando GET</i>");
-                    }
-                }
-            } catch(Exception ee){
-                System.err.println("Algo anda mal...");
-                System.err.println(ee.getStackTrace().toString());
             }
+        };
+        try(Dao<Usuario> dt = new Dao<>(Conector.conectar(), "usuario_x", Usuario.class)){
+            dt.Query("Where Login = '" + request.getParameter("nombre") + "'");
+            if(dt.data.size() != 1){
+                out.println("<p>");
+                out.println("<b>No existe el usuario: " + request.getParameter("nombre") + "</b>");
+                out.println("</p>");
+            } else {
+                String[] args = {"sip", "myLogin", "myPass"}, types = {"Integer Out", "Varchar2 In", "Varchar2 In"}, vals = {null, request.getParameter("nombre"), HashProcessor.hash(request.getParameter("pass") + dt.data.get(0).get("Llave_sec"), "SHA-256")};
+                System.out.println("Prueba...");
+                dt.Procedure("autenticar_usuariox", args, types, vals, cb);
+                entra = (int)cb.data.get("entra");
+                dt.Query(null);
+                if(method == 1){
+                    if(entra == 1){
+                        Cookie ckLog = new Cookie("Login", vals[1]);
+                        HttpSession ss = request.getSession();
+                        ss.setAttribute("usuario", vals[1]);
+                        ss.setMaxInactiveInterval(30 * 60);
+                        ckLog.setMaxAge(30 * 60);
+                        response.addCookie(ckLog);
+                        out.println("<p>");
+                        out.println("<b>YA!</b> Estas adentro " + request.getParameter("nombre") + "!<br>");
+                        out.println("Vienes desde " + request.getRemoteAddr());
+                        out.println("<br>Tenemos " + dt.data.size() + " usuarios:<br>");
+                        for(Usuario i: dt.data){
+                            out.println(i.get("Login") + "<br>");
+                        }
+                        out.println("<div id=\"inserciones\"></div>");
+                        out.println("<br>Insertar usuarios:<br>");
+                        out.println("<label for:=\"nuinput\">Login:</label><input type=\"text\" name=\"nuinput\" id=\"nombre\"/>");
+                        out.println("<label for:=\"npinput\">Password:</label><input type=\"password\" name=\"npinput\" id=\"pwd\"/>");
+                        out.println("<a id=\"insertar\" class=\"ui-btn ui-icon-plus ui-btn-icon-left\">Insertar</a>");
+                        out.println("</p>");
+                    } else {
+                        out.println("<b>Acceso denegado: password incorrecto</b>");
+                    }
+                } else {
+                    out.println("<i>Oye oye tranquilo estas usando GET</i>");
+                }
+            }
+        } catch(Exception ee){
+            System.err.println("Algo anda mal...");
+            System.err.println(ee.getStackTrace().toString());
+        }
     }
 }
