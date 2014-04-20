@@ -1,3 +1,17 @@
+Create table area(Id integer, nombre varchar2(30), descripcion varchar2(150), Constraint area_pk Primary Key(id))
+/
+
+Create sequence area_seq start with 1 increment by 1 nomaxvalue order nocache
+/
+
+create trigger bi_area before insert on area for each row
+begin
+    if :new.id is null then
+        select area_seq.nextval into :new.id from dual;
+    end if;
+end;
+/
+
 CREATE table "ESPECIALIDAD" (
     "ID_ESPECIALIDAD" NUMBER,
     "ID_AREA"         NUMBER,
@@ -7,25 +21,27 @@ CREATE table "ESPECIALIDAD" (
 )
 /
 
-CREATE sequence "ESPECIALIDAD_SEQ" 
+CREATE sequence "ESPECIALIDAD_SEQ"
 /
 
-CREATE trigger "BI_ESPECIALIDAD"  
+CREATE trigger "BI_ESPECIALIDAD"
 
-  before insert on "ESPECIALIDAD"              
-  for each row 
-begin  
+  before insert on "ESPECIALIDAD"
+  for each row
+begin
   if :NEW."ID_ESPECIALIDAD" is null then
     select "ESPECIALIDAD_SEQ".nextval into :NEW."ID_ESPECIALIDAD" from dual;
   end if;
 end;
-/   
+/
 
-ALTER TABLE "ESPECIALIDAD" ADD CONSTRAINT "ESPECIALIDAD_FK" 
+ALTER TABLE "ESPECIALIDAD" ADD CONSTRAINT "ESPECIALIDAD_FK"
 FOREIGN KEY ("ID_AREA")
 REFERENCES "AREA" ("ID")
 
-/CREATE table "CLINICA" (
+/
+
+CREATE table "CLINICA" (
     "ID_CLINICA" NUMBER NOT NULL,
     "NOMBRE"     VARCHAR2(50),
     "DIRECCION"  VARCHAR2(50),
@@ -34,18 +50,18 @@ REFERENCES "AREA" ("ID")
 )
 /
 
-CREATE sequence "clinica" 
+CREATE sequence "clinica"
 /
 
-CREATE trigger "BI_CLINICA"  
-  before insert on "CLINICA"              
-  for each row 
-begin  
+CREATE trigger "BI_CLINICA"
+  before insert on "CLINICA"
+  for each row
+begin
   if :NEW."ID_CLINICA" is null then
     select "clinica".nextval into :NEW."ID_CLINICA" from dual;
   end if;
 end;
-/   
+/
 
 
 CREATE table "DOCTOR" (
@@ -54,79 +70,25 @@ CREATE table "DOCTOR" (
     "APELLIDO"        VARCHAR2(50),
     "ID_ESPECIALIDAD" NUMBER,
     "ID_CLINICA"      NUMBER,
-    constraint  "DOCTOR_PK" primary key ("ID_DOCTOR")
+    constraint  "DOCTOR_PK" primary key ("ID_DOCTOR"),
+    constraint  doctor_especialidad_fk FOREIGN KEY ("ID_ESPECIALIDAD") REFERENCES "ESPECIALIDAD"("ID_ESPECIALIDAD"),
+    constraint  doctor_clinica_fk FOREIGN KEY ("ID_CLINICA") REFERENCES "CLINICA"("ID_CLINICA") On delete set null
 )
 /
 
-CREATE sequence "DOCTOR_SEQ" 
+CREATE sequence "DOCTOR_SEQ"
 /
 
-CREATE trigger "BI_DOCTOR"  
-  before insert on "DOCTOR"              
-  for each row 
-begin  
+CREATE trigger "BI_DOCTOR"
+  before insert on "DOCTOR"
+  for each row
+begin
   if :NEW."ID_DOCTOR" is null then
     select "DOCTOR_SEQ".nextval into :NEW."ID_DOCTOR" from dual;
   end if;
 end;
-/   
-
-ALTER TABLE "DOCTOR" ADD CONSTRAINT "DOCTOR_FK" 
-FOREIGN KEY ("ID_ESPECIALIDAD")
-REFERENCES "ESPECIALIDAD" ("ID_ESPECIALIDAD")
-
-/
-ALTER TABLE "DOCTOR" ADD CONSTRAINT "DOCTOR_FK2" 
-FOREIGN KEY ("ID_CLINICA")
-REFERENCES "CLINICA" ("ID_CLINICA")
-
 /
 
-    "ID_DOCTOR"    NUMBER NOT NULL,
-    "NOMBRE"       VARCHAR2(50),
-    "APELLIDO"     VARCHAR2(50),
-    "ESPECIALIDAD" NUMBER,
-    "CLINICA"      NUMBER,
-    constraint  "MEDICO_PK" primary key ("ID_DOCTOR")
-)
-/
-
-CREATE sequence "MEDICO_SEQ" 
-/
-
-CREATE trigger "BI_MEDICO"  
-  before insert on "MEDICO"              
-  for each row 
-begin  
-  if :NEW."ID_DOCTOR" is null then
-    select "MEDICO_SEQ".nextval into :NEW."ID_DOCTOR" from dual;
-  end if;
-end;
-/   
-
-ALTER TABLE "MEDICO" ADD CONSTRAINT "MEDICO_FK" 
-
-
-
-int id=res.getInt(1);
-         String nombre=res.getString(2);
-         String apellido=res.getString(3);
-          int especialidad=res.getInt(4);
-          int clinica=res.getInt(5);
-            Medico me=new Medico(id,nombre,apellido,especialidad,clinica); 
-         med.add(me);
-       }
-       return med;
-FOREIGN KEY ("ESPECIALIDAD")
-REFERENCES "ESPECIALIDAD" ("ID_ESPECIALIDAD")
-
-/
-ALTER TABLE "MEDICO" ADD CONSTRAINT "MEDICO_FK2" 
-FOREIGN KEY ("CLINICA")
-REFERENCES "CLINICA" ("ID_CLINICA")
-ON DELETE SET NULL
-
-/
 
 CREATE table "RESERVACION" (
     "ID_RESERVACION" NUMBER NOT NULL,
@@ -135,171 +97,30 @@ CREATE table "RESERVACION" (
     "DOCTOR"         NUMBER,
     "CLINICA"        NUMBER,
     "FECHA"          TIMESTAMP WITH TIME ZONE,
-    constraint  "RESERVACION_PK" primary key ("ID_RESERVACION")
+    constraint "RESERVACION_PK" primary key ("ID_RESERVACION"),
+    CONSTRAINT "RESERVACION_ESPECIALIDAD_FK" FOREIGN KEY ("ESPECIALIDAD") REFERENCES "ESPECIALIDAD" ("ID_ESPECIALIDAD"),
+    CONSTRAINT "RESERVACION_DOCTOR_FK" FOREIGN KEY ("DOCTOR") REFERENCES "DOCTOR" ("ID_DOCTOR"),
+    CONSTRAINT "RESERVACION_CLINICA_FK" FOREIGN KEY ("CLINICA") REFERENCES "CLINICA" ("ID_CLINICA")
 )
 /
 
-CREATE sequence "RESERVACION_SEQ" 
+CREATE sequence "RESERVACION_SEQ"
 /
 
-CREATE trigger "BI_RESERVACION"  
-  before insert on "RESERVACION"              
-  for each row 
-begin  
+CREATE trigger "BI_RESERVACION"
+  before insert on "RESERVACION"
+  for each row
+begin
   if :NEW."ID_RESERVACION" is null then
     select "RESERVACION_SEQ".nextval into :NEW."ID_RESERVACION" from dual;
   end if;
 end;
-/   
-
-ALTER TABLE "RESERVACION" ADD CONSTRAINT "RESERVACION_FK" 
-FOREIGN KEY ("ESPECIALIDAD")
-REFERENCES "ESPECIALIDAD" ("ID_ESPECIALIDAD")
-
-/
-ALTER TABLE "RESERVACION" ADD CONSTRAINT "RESERVACION_FK2" 
-FOREIGN KEY ("DOCTOR")
-REFERENCES "MEDICO" ("ID_DOCTOR")
-
-/
-ALTER TABLE "RESERVACION" ADD CONSTRAINT "RESERVACION_FK3" 
-FOREIGN KEY ("CLINICA")
-REFERENCES "CLINICA" ("ID_CLINICA")
-
-/
-
-CREATE table "RESERVACION" (
-    "ID_RESERVACION" NUMBER NOT NULL,
-    "USUARIO"        NUMBER,
-    "ESPECIALIDAD"   NUMBER,
-    "DOCTOR"         NUMBER,
-    "CLINICA"        NUMBER,
-    "FECHA"          TIMESTAMP WITH TIME ZONE,
-    constraint  "RESERVACION_PK" primary key ("ID_RESERVACION")
-)
-/
-
-CREATE sequence "RESERVACION_SEQ" 
-STAR WITH 1
-INCREMENT BY 1
-NOMAXVALUE;
-/
-
-CREATE trigger "BI_RESERVACION"  
-  before insert on "RESERVACION"              
-  for each row 
-begin  
-  
-    select "RESERVACION_SEQ".nextval into :NEW."ID_RESERVACION" from dual;
- 
-end;
-/   
-
-ALTER TABLE "RESERVACION" ADD CONSTRAINT "RESERVACION_FK" 
-FOREIGN KEY ("ESPECIALIDAD")
-REFERENCES "ESPECIALIDAD" ("ID_ESPECIALIDAD")
-
-/
-ALTER TABLE "RESERVACION" ADD CONSTRAINT "RESERVACION_FK2" 
-FOREIGN KEY ("DOCTOR")
-REFERENCES "MEDICO" ("ID_DOCTOR")
-
-/
-ALTER TABLE "RESERVACION" ADD CONSTRAINT "RESERVACION_FK3" 
-FOREIGN KEY ("CLINICA")
-REFERENCES "CLINICA" ("ID_CLINICA")
-
-/
-CREATE table "RESERVACION" (
-    "ID_RESERVACION" NUMBER NOT NULL,
-    "USUARIO"        NUMBER,
-    "ESPECIALIDAD"   NUMBER,
-    "DOCTOR"         NUMBER,
-    "CLINICA"        NUMBER,
-    "FECHA"          TIMESTAMP WITH TIME ZONE,
-    constraint  "RESERVACION_PK" primary key ("ID_RESERVACION")
-)
-/
-
-CREATE sequence "RESERVACION_SEQ" 
-STAR WITH 1
-INCREMENT BY 1
-NOMAXVALUE;
-/
-
-CREATE trigger "BI_RESERVACION"  
-  before insert on "RESERVACION"              
-  for each row 
-begin  
-  
-    select "RESERVACION_SEQ".nextval into :NEW."ID_RESERVACION" from dual;
- 
-end;
-/   
-
-ALTER TABLE "RESERVACION" ADD CONSTRAINT "RESERVACION_FK" 
-FOREIGN KEY ("ESPECIALIDAD")
-REFERENCES "ESPECIALIDAD" ("ID_ESPECIALIDAD")
-
-/
-ALTER TABLE "RESERVACION" ADD CONSTRAINT "RESERVACION_FK2" 
-FOREIGN KEY ("DOCTOR")
-REFERENCES "MEDICO" ("ID_DOCTOR")
-
-/
-ALTER TABLE "RESERVACION" ADD CONSTRAINT "RESERVACION_FK3" 
-FOREIGN KEY ("CLINICA")
-REFERENCES "CLINICA" ("ID_CLINICA")
-
-/
-CREATE table "RESERVACION" (
-    "ID_RESERVACION" NUMBER NOT NULL,
-    "USUARIO"        NUMBER,
-    "ESPECIALIDAD"   NUMBER,
-    "DOCTOR"         NUMBER,
-    "CLINICA"        NUMBER,
-    "FECHA"          TIMESTAMP WITH TIME ZONE,
-    constraint  "RESERVACION_PK" primary key ("ID_RESERVACION")
-)
-/
-
-CREATE sequence "RESERVACION_SEQ" 
-STAR WITH 1
-INCREMENT BY 1
-NOMAXVALUE;
-/
-
-CREATE trigger "BI_RESERVACION"  
-  before insert on "RESERVACION"              
-  for each row 
-begin  
-  
-    select "RESERVACION_SEQ".nextval into :NEW."ID_RESERVACION" from dual;
- 
-end;
-/   
-
-ALTER TABLE "RESERVACION" ADD CONSTRAINT "RESERVACION_FK" 
-FOREIGN KEY ("ESPECIALIDAD")
-REFERENCES "ESPECIALIDAD" ("ID_ESPECIALIDAD")
-
-/
-ALTER TABLE "RESERVACION" ADD CONSTRAINT "RESERVACION_FK2" 
-FOREIGN KEY ("DOCTOR")
-REFERENCES "MEDICO" ("ID_DOCTOR")
-
-/
-ALTER TABLE "RESERVACION" ADD CONSTRAINT "RESERVACION_FK3" 
-FOREIGN KEY ("CLINICA")
-REFERENCES "CLINICA" ("ID_CLINICA")
-
 /
 
 CREATE OR REPLACE PROCEDURE reservar(id out integer,usuario in integer,especialidad in integer,doctor in integer,clinica in integer,fecha in TIMESTAMP)
 AS
-
-valor integer;
 BEGIN
-insert into reservacion(id_reservacion,usuario,especialidad,doctor,clinica,fecha)values(valor,usuario,especialidad,doctor,clinica,fecha);
+select reservacion_seq.nextval into id from dual;
+insert into reservacion(id_reservacion,usuario,especialidad,doctor,clinica,fecha)values(id,usuario,especialidad,doctor,clinica,fecha);
 END;
 /
