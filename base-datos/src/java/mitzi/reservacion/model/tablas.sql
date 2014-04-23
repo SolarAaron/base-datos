@@ -124,3 +124,5 @@ select reservacion_seq.nextval into id from dual;
 insert into reservacion(id_reservacion,usuario,especialidad,doctor,clinica,fecha)values(id,usuario,especialidad,doctor,clinica,fecha);
 END;
 /
+
+modificacion nada
