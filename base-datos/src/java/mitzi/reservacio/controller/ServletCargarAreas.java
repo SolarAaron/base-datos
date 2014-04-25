@@ -16,8 +16,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import mitzi.reservacion.model.DAOArea;
 import mitzi.reservacion.model.Area;
+import mitzi.reservacion.model.DAOArea;
+import mitzi.reservacion.model.DAOClinica;
+import mitzi.reservacion.model.DAOMedico;
 
 
 /**
@@ -25,30 +27,45 @@ import mitzi.reservacion.model.Area;
  * @author mario
  */
 public class ServletCargarAreas extends HttpServlet {
-DAOArea areas=new DAOArea();
+
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException{
-    
-    try{
         
-        ArrayList x=new ArrayList();
-        for(Area a:DAOArea.buscarAreas()){
+        try {
+            request.setAttribute("resultado",DAOArea.buscarAreas());
             
-            Area ar=new Area(a.getId(),a.getNombre(),a.getDescripcion());
-            x.add(ar);
             
+            
+        } catch (Exception ex) {
+            request.setAttribute("resultado","vacioo lipi");
+           
         }
-        
-        
-        try{
+         try {
+            request.setAttribute("medico",DAOMedico.buscarMedico());
             
-            request.setAttribute("resultado",x);
+            
+            
+        } catch (Exception ex) {
+            request.setAttribute("medico","vacioo lipi");
+           
+        }
+        try {
+            request.setAttribute("clinica",DAOClinica.buscarClinica());
+        } catch (Exception ex) {
+            request.setAttribute("clinica","vacioo lipi");
+        }
+  try{
+            RequestDispatcher despachar=request.getRequestDispatcher("reservaciones.jsp");
+            despachar.forward(request, response);
             
         } catch (Exception ex) {  }
         
         
-    } catch (Exception ex) {Logger.getLogger(ServletCargarAreas.class.getName()).log(Level.SEVERE, null, ex);
-  }
+           
+       
+            
+         
         
         
     }          

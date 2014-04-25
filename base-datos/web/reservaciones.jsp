@@ -28,33 +28,28 @@
                 
 
                 <form action="cargar-areas" >
-                    <input type="submit" value="Cargar doctores">
+                  
               
-                </form>
+              
                 <table><tr><td>Area</td>
-                            <td><select name="area">
-                                  <c:forEach items="${resultado}" var="item">
-                                  <option value="Windows">${item}</option></c:forEach></select>
-                            </td>  
-                   </tr><tr>
-                            <td>Especialidad</td>
-                            <td><select name="especialidad">
-                                  <c:forEach items="${resultado}" var="item">
-                                      <option value="Windows">${item}</option></c:forEach></select>
-                            </td>
+                            <td><select name="area"><c:forEach items="${resultado}" var="item">
+                                  <option value=${item.id}>${item.nombre}</option></c:forEach> --></select>
+                            </td> 
                     </tr><tr>
                             <td>Clinicas</td>
-                            <td><select name="clinicas">
-                                  <c:forEach items="${resultado}" var="item">
-                                      <option value="Windows">${item}</option></c:forEach></select>
+                            <td><select name="clinica"><c:forEach items="${clinica}" var="item">
+                                  <option value=${item.id}>${item.nombre}</option></c:forEach> --></select>
                             </td>
                     </tr><tr>
                             <td>Especialista</td>
-                            <td><select name="clinicas">
-                                    <c:forEach items="${resultado}" var="item">
-                                           <option value="Windows">${item}</option></c:forEach></select>
+                            <td><select name="Especialista"><c:forEach items="${medico}" var="item">
+                                  <option value=${item.id}>${item.nombre}</option></c:forEach> --></select>
                             </td>
-                    </tr> </table>${resultado}
+                    </tr> </table>   
+                    
+                    
+                    <input type="submit" value="Reservar">
+                      </form>
             </div>
             
         </div>
