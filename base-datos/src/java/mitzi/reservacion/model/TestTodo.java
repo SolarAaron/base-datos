@@ -21,7 +21,7 @@ public class TestTodo {
        /*for( Area u:DAOArea.buscarAreas()  ){
            System.out.println(u.getNombre()+u.getDescripcion()+u.getId());
        }*/
-        System.out.println(DAOArea.buscarAreas());
+        System.out.println((new DAOArea()).buscarAreas());
        
     }
 }

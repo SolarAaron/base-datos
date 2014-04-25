@@ -17,11 +17,11 @@ import java.util.ArrayList;
  */
 public class DAOMedico {
     
-          static Conexion con;
+          Conexion con;
       public DAOMedico(){
         con=new Conexion();
     }
-    public static  ArrayList<Medico> buscarMedico()throws Exception {
+    public  ArrayList<Medico> buscarMedico()throws Exception {
        ArrayList<Medico> med=new ArrayList<Medico>();  
        //Primero nos conectamos a la base de datos
     Connection conexion= con.conectarse();

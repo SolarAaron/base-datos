@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.CallableStatement;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -17,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import slr.db2.Conector;
-import slr.db2.lib.Dao;
+import slr.db2.model.DaoUsuario;
 import slr.db2.model.Usuario;
 import slr.lib.CallbackWrapper;
 import slr.lib.HashProcessor;
@@ -26,7 +27,7 @@ import slr.lib.HashProcessor;
  *
  * @author aaron
  */
-public class ServletLectura implements IServletExtension{
+public class ServletEntrada implements IServletExtension{
 
     /**
      * Processes requests for both HTTP
@@ -35,6 +36,8 @@ public class ServletLectura implements IServletExtension{
      *
      * @param request servlet request
      * @param response servlet response
+     * @param method
+     * @param out
      *
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
@@ -51,11 +54,11 @@ public class ServletLectura implements IServletExtension{
                 try{
                     data.put("entra", arg.getInt(1));
                 } catch(SQLException ex){
-                    Logger.getLogger(ServletLectura.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ServletEntrada.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         };
-        try(Dao<Usuario> dt = new Dao<>(Conector.conectar(), "usuario_x", Usuario.class)){
+        try(DaoUsuario dt = new DaoUsuario(Conector.conectar(), "usuario_x", Usuario.class)){
             dt.Query("Where Login = '" + request.getParameter("nombre") + "'");
             if(dt.data.size() != 1){
                 out.println("<p>");
@@ -97,7 +100,7 @@ public class ServletLectura implements IServletExtension{
             }
         } catch(Exception ee){
             System.err.println("Algo anda mal...");
-            System.err.println(ee.getStackTrace().toString());
+            System.err.println(Arrays.toString(ee.getStackTrace()));
         }
     }
 }

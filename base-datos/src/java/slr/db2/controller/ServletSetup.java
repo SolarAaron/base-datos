@@ -14,7 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import slr.db2.Conector;
-import slr.db2.lib.Dao;
+import slr.db2.model.DaoUsuario;
 import slr.db2.model.Usuario;
 import slr.lib.CallbackWrapper;
 import slr.lib.HashProcessor;
@@ -51,7 +51,7 @@ public class ServletSetup implements IServletExtension{
                 }
             };
             System.err.println("Entrando a setup");
-            try(Dao<Usuario> dt = new Dao<>(Conector.conectar(), "usuario_1", Usuario.class)){
+            try(DaoUsuario dt = new DaoUsuario(Conector.conectar(), "usuario_1", Usuario.class)){
                 if(method == 0){
                     out.println("Insertar con GET? Que locura!!");
                 } else {

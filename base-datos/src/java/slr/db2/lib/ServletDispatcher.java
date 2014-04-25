@@ -36,10 +36,11 @@ public class ServletDispatcher extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             System.err.println("Entrando a servlet");
             try {
-                IServletExtension ext = (IServletExtension) Class.forName("slr.db2.controller." + request.getParameter("servlet")).newInstance();
+                IServletExtension ext = (IServletExtension) Class.forName(request.getParameter("servlet")).newInstance();
                 ext.procesar(request, response, method, out);
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
                 Logger.getLogger(ServletDispatcher.class.getName()).log(Level.SEVERE, null, ex);
+                out.println("Error: algo anda mal en el sistema");
             }
         }
     }

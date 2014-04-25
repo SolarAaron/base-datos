@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * @author mario
  */
 public class DAOReservacion{
-    static Conexion con;
+    Conexion con;
 
     public DAOReservacion(){
         con = new Conexion();
@@ -27,20 +27,24 @@ public class DAOReservacion{
     public void reservar(Reservacion r) throws Exception{
         Connection cone = con.conectarse();
         CallableStatement callate = cone.prepareCall("{call reservar(?,?,?,?,?,?)}");
-        callate.setInt(1, r.getId());
+        // Id es de salida
         callate.setInt(2, r.getId_usuario());
         callate.setInt(3, r.getId_especialidad());
         callate.setInt(4, r.getId_doctor());
         callate.setInt(5, r.getId_clinica());
         callate.setTimestamp(6, r.getFecha());
-        callate.executeUpdate();
+        callate.execute();
+        if(callate.getUpdateCount() == 1){
+            System.out.println("Se realizo la reservacion numero " + callate.getInt(1) + " con exito");
+        } else {
+            System.err.println("Fallo la reservacion");
+        }
         callate.close();
         cone.close();
-        System.out.println("Se realizo la reservacion con exito");
 
     }
 
-    public static ArrayList<Reservacion> buscarReservaciones() throws Exception{
+    public ArrayList<Reservacion> buscarReservaciones() throws Exception{
         ArrayList<Reservacion> reserva = new ArrayList<Reservacion>();
         //Primero nos conectamos a la base de datos
         Connection conexion = con.conectarse();

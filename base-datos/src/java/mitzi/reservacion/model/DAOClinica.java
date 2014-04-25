@@ -16,11 +16,11 @@ import java.util.ArrayList;
  * @author mario
  */
 public class DAOClinica {
-       static Conexion con;
+       Conexion con;
       public DAOClinica(){
         con=new Conexion();
     }
-    public static  ArrayList<Clinica> buscarClinica()throws Exception {
+    public  ArrayList<Clinica> buscarClinica()throws Exception {
        ArrayList<Clinica> cli=new ArrayList<Clinica>();  
        //Primero nos conectamos a la base de datos
     Connection conexion= con.conectarse();

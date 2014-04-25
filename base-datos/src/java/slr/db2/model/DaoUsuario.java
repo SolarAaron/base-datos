@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package slr.db2.lib;
+package slr.db2.model;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -17,16 +17,15 @@ import slr.lib.CallbackWrapper;
 
 /**
  *
- * @author aaron
- * @param <T> tipo Pod
+ * @author jtorres
  */
-public class Dao<T extends Pod> implements AutoCloseable{
+public class DaoUsuario implements AutoCloseable{
     String table;
-    public LinkedList<T> data; // moddable results
+    public LinkedList<Usuario> data; // moddable results
     private Connection src;
-    private Class<T> clcon;
-
-    public Dao(Connection x, String tab, Class<T> type) throws Exception{
+    private Class<Usuario> clcon;
+    
+    public DaoUsuario(Connection x, String tab, Class<Usuario> type) throws Exception{
         if(x == null){
             throw new Exception("No hay conexion a DB");
         }
@@ -35,7 +34,7 @@ public class Dao<T extends Pod> implements AutoCloseable{
         data = new LinkedList<>();
         clcon = type;
     }
-
+    
     public void Query(String sql_extra){
         String[] cols;
         String spec = "";
@@ -53,7 +52,7 @@ public class Dao<T extends Pod> implements AutoCloseable{
             res = sta.executeQuery("Select " + spec + " from " + table + (sql_extra == null ? "" : sql_extra));
             data.clear();
             while(res.next()){
-                T tmp = clcon.newInstance();
+                Usuario tmp = clcon.newInstance();
                 for(String i: cols){
                     tmp.set(i, res.getObject(i));
                 }
@@ -109,9 +108,10 @@ public class Dao<T extends Pod> implements AutoCloseable{
             System.out.println("Operacion exitosa");
         }
     }
-
+    
     @Override
-    public void close() throws Exception{
+    public void close() throws Exception {
         src.close();
     }
+    
 }

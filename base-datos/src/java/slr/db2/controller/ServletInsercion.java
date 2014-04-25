@@ -17,9 +17,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import slr.db2.Conector;
+import slr.db2.model.DaoUsuario;
 import slr.db2.model.Usuario;
 import slr.lib.CallbackWrapper;
-import slr.db2.lib.Dao;
 import slr.lib.HashProcessor;
 
 /**
@@ -53,7 +53,7 @@ public class ServletInsercion implements IServletExtension{
                     }
                 }
             };
-            try(Dao<Usuario> dt = new Dao<>(Conector.conectar(), "usuario_1", Usuario.class)){
+            try(DaoUsuario dt = new DaoUsuario(Conector.conectar(), "usuario_1", Usuario.class)){
                 if(method == 0){
                     out.println("<b>Insertar con GET? Que locura!!</b><br>");
                 } else {

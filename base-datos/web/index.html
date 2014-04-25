@@ -6,8 +6,12 @@
         <link href="css/themes/slr.css" rel="stylesheet" type="text/css"/>
         <link href="css/themes/jquery.mobile.icons.min.css" rel="stylesheet" type="text/css"/>
         <link href="css/jquery.mobile.structure-1.4.2.css" rel="stylesheet" type="text/css"/>
+        <link href="css/ui-lightness/jquery-ui-1.10.4.custom.css" rel="stylesheet">
+        <link href="css/jquery.mobile.datepicker.css" rel="stylesheet">
         <script src="jscript/jquery-1.11.0.js" type="text/javascript"></script>
         <script src="jscript/jquery.mobile-1.4.2.js" type="text/javascript"></script>
+        <script src="jscript/jquery-ui-1.10.4.custom.js"></script>
+        <script src="jscript/jquery.mobile.datepicker.js"></script>
         <script src="jscript/Misc.js" type="text/javascript"></script>
         <script language="javascript">
             $(document).ready(function(e){
@@ -19,7 +23,7 @@
                             url: '/base-datos/util.php',
                             type: 'POST',
                             data: {
-                                servlet: 'ServletSetup'
+                                servlet: 'slr.db2.controller.ServletSetup'
                             },
                             success: function(datos){
                                 alert(datos);
@@ -35,11 +39,25 @@
                         data: {
                             nombre: $("#login").val(),
                             pass: $("#password").val(),
-                            servlet: 'ServletLectura'
+                            servlet: 'slr.db2.controller.ServletEntrada'
                         },
                         success: function(datos){
-
-                            $("#resultado").html(datos).trigger("create");
+                            // Cargar jsp dentro de la pagina via ServletCargarAreas
+                            $("#insercion").html(datos).trigger("create");
+                            $.ajax({
+                                url: '/base-datos/util.php',
+                                type: 'POST',
+                                data: { // Re-implementado como despachador
+                                    servlet: 'mitzi.reservacion.controller.ServletCargarAreas'
+                                },
+                                success: function(dttt){
+                                    $("#resultado").html(dttt).trigger("create");
+                                }
+                            });
+                            $("#tituloSistema").html("<h1>Reservaciones</h1>").trigger("create");
+                            
+                            // Setup inserciones
+                            // Insertar es parte del resultado de ServletEntrada al cargar usuarios
                             $("#insertar").click(function(){
                                 $.ajax({
                                     url: '/base-datos/util.php',
@@ -47,13 +65,35 @@
                                     data: {
                                         login: $("#nombre").val(),
                                         pase: $("#pwd").val(),
-                                        servlet: 'ServletInsercion'
+                                        servlet: 'slr.db2.controller.ServletInsercion'
                                     },
                                     success: function(dt){
                                         $("#inserciones").html($("#inserciones").html() + dt).trigger("create");
                                     },
                                     failure: function(){
                                         alert("Algo anda mal...");
+                                    }
+                                });
+                            });
+                            
+                            // Setup reservaciones
+                            // botonReservaciones cargado desde jsp
+                            // username es div en jsp
+                            // area, medico, clinica, fecha definidos en jsp
+                            $("#botonReservar").click(function(){
+                                $.ajax({
+                                    url: '/base-datos/util.php',
+                                    type: 'POST',
+                                    data: {
+                                        servlet: 'slr.db2.controller.ServletReservacion',
+                                        IdUs: $("#username").html(),
+                                        IdEsp: $("#area").val(),
+                                        IdDoc: $("#medico").val(),
+                                        IdClin: $("#clinica").val(),
+                                        tsdate: $.datepicker.formatDate("@", $("#fecha").val())
+                                    },
+                                    success: function(dt){
+                                        $("#inserciones").html($("#inserciones").html() + dt).trigger("create");
                                     }
                                 });
                             });
@@ -100,8 +140,7 @@
         </div>
         <div data-role="page" id="res">
             <div data-role="header">
-                <h1>Sistema</h1>
-                <a href="reservaciones.jsp">Reservaciones</a>
+                <div id="tituloSistema"></div> <!-- Cargar con AJAX hacia #resultado desde jsp, asignar el titulo dinamicamente -->
             </div>
             <div data-role="content">
                 <div id="resultado"></div>
@@ -112,6 +151,12 @@
                 </ul>
             </div>
         </div>
+        
+        <div id="entrada"></div>
+        <div id="insercion"></div>
+        <div id="reservacion"></div>
+        <div id="calendario"></div>
+        <div id="temp"></div>
 
     </body>
 </html>

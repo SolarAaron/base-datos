@@ -18,11 +18,11 @@ import mitzi.reservacion.model.Especialidad;
  * @author mario
  */
 public class DAOEspecialidad {
-     static Conexion con;
+     Conexion con;
       public DAOEspecialidad(){
         con=new Conexion();
     }
-    public static  ArrayList<Especialidad> buscarEspecialidad()throws Exception {
+    public  ArrayList<Especialidad> buscarEspecialidad()throws Exception {
        ArrayList<Especialidad> especialidad=new ArrayList<Especialidad>();  
        //Primero nos conectamos a la base de datos
     Connection conexion= con.conectarse();

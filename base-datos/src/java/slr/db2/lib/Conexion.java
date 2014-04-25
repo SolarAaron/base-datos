@@ -52,4 +52,9 @@ public class Conexion {
         }
         return ret;
     }
+    
+    public static Connection conectar(String user, String pass, String db, DBType tt, String server){
+        Conexion tmp = new Conexion(user, pass, db);
+        return tmp.conectar(tt, server);
+    }
 }
