@@ -21,7 +21,7 @@ public class DAOArea {
         con=new Conexion();
     }
     public static  ArrayList<Area> buscarAreas()throws Exception {
-       ArrayList<Area> a=new ArrayList<Area>();  
+       ArrayList<Area> a=new ArrayList<>();  
        //Primero nos conectamos a la base de datos
     Connection conexion= con.conectarse();
     //Crear un Statement de sql

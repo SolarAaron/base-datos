@@ -4,9 +4,17 @@
         <servlet-name>Trigger</servlet-name>
         <servlet-class>slr.db2.lib.ServletDispatcher</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ServletCargarAreas</servlet-name>
+        <servlet-class>mitzi.reservacio.controller.ServletCargarAreas</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Trigger</servlet-name>
         <url-pattern>/util.php</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServletCargarAreas</servlet-name>
+        <url-pattern>/cargar-areas</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

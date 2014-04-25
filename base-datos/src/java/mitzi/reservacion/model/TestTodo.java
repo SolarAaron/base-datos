@@ -18,9 +18,10 @@ public class TestTodo {
     public static void main(String...x)throws Exception{
         System.out.println("probando usuario");
         
-       for( Area u:DAOArea.buscarAreas()  ){
+       /*for( Area u:DAOArea.buscarAreas()  ){
            System.out.println(u.getNombre()+u.getDescripcion()+u.getId());
-       }
+       }*/
+        System.out.println(DAOArea.buscarAreas());
        
     }
 }
