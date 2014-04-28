@@ -24,7 +24,7 @@ public class DaoUsuario implements AutoCloseable{
     public LinkedList<Usuario> data; // moddable results
     private Connection src;
     private Class<Usuario> clcon;
-    
+
     public DaoUsuario(Connection x, String tab, Class<Usuario> type) throws Exception{
         if(x == null){
             throw new Exception("No hay conexion a DB");
@@ -34,7 +34,7 @@ public class DaoUsuario implements AutoCloseable{
         data = new LinkedList<>();
         clcon = type;
     }
-    
+
     public void Query(String sql_extra){
         String[] cols;
         String spec = "";
@@ -48,8 +48,8 @@ public class DaoUsuario implements AutoCloseable{
                 }
                 spec = spec + cols[i];
             }
-            System.out.println("Select " + spec + " from " + table + (sql_extra == null ? "" : sql_extra));
-            res = sta.executeQuery("Select " + spec + " from " + table + (sql_extra == null ? "" : sql_extra));
+            System.out.println("Select " + spec + " from " + table + (sql_extra == null ? "" : " " + sql_extra));
+            res = sta.executeQuery("Select " + spec + " from " + table + (sql_extra == null ? "" : " " + sql_extra));
             data.clear();
             while(res.next()){
                 Usuario tmp = clcon.newInstance();
@@ -108,10 +108,10 @@ public class DaoUsuario implements AutoCloseable{
             System.out.println("Operacion exitosa");
         }
     }
-    
+
     @Override
     public void close() throws Exception {
         src.close();
     }
-    
+
 }

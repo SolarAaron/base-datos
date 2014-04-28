@@ -69,7 +69,6 @@ public class ServletEntrada implements IServletExtension{
                 System.out.println("Prueba...");
                 dt.Procedure("autenticar_usuariox", args, types, vals, cb);
                 entra = (int)cb.data.get("entra");
-                dt.Query(null);
                 if(method == 1){
                     if(entra == 1){
                         Cookie ckLog = new Cookie("Login", vals[1]);
@@ -79,18 +78,10 @@ public class ServletEntrada implements IServletExtension{
                         ckLog.setMaxAge(30 * 60);
                         response.addCookie(ckLog);
                         out.println("<p>");
-                        out.println("<b>YA!</b> Estas adentro " + request.getParameter("nombre") + "!<br>");
-                        out.println("Vienes desde " + request.getRemoteAddr());
-                        out.println("<br>Tenemos " + dt.data.size() + " usuarios:<br>");
-                        for(Usuario i: dt.data){
-                            out.println(i.get("Login") + "<br>");
-                        }
-                        out.println("<div id=\"inserciones\"></div>");
-                        out.println("<br>Insertar usuarios:<br>");
-                        out.println("<label for:=\"nuinput\">Login:</label><input type=\"text\" name=\"nuinput\" id=\"nombre\"/>");
-                        out.println("<label for:=\"npinput\">Password:</label><input type=\"password\" name=\"npinput\" id=\"pwd\"/>");
-                        out.println("<a id=\"insertar\" class=\"ui-btn ui-icon-plus ui-btn-icon-left\">Insertar</a>");
-                        out.println("</p>");
+                        out.println("Bienvenido al sistema " + request.getParameter("nombre") + "!<br>");
+                        out.println("Entrada registrada desde " + request.getRemoteAddr() + "<br><br>");
+                        out.println("<a href=\"#resz\" class=\"ui-btn ui-icon-plus ui-btn-icon-left\">Ir a Reservaciones</a>");
+                        out.println("<a href=\"#alta\" class=\"ui-btn ui-icon-plus ui-btn-icon-left\">Ir a Alta de usuarios</a>");
                     } else {
                         out.println("<b>Acceso denegado: password incorrecto</b>");
                     }

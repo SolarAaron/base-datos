@@ -43,7 +43,8 @@
                         },
                         success: function(datos){
                             // Cargar jsp dentro de la pagina via ServletCargarAreas
-                            $("#insercion").html(datos).trigger("create");
+                            // !!! El jsp se va a cargar aunque el usuario no tenga acceso !!!
+                            $("#resultado").html(datos).trigger("create");
                             $.ajax({
                                 url: '/base-datos/util.php',
                                 type: 'POST',
@@ -51,51 +52,60 @@
                                     servlet: 'mitzi.reservacion.controller.ServletCargarAreas'
                                 },
                                 success: function(dttt){
-                                    $("#resultado").html(dttt).trigger("create");
+                                    $("#reservacion").html(dttt).trigger("create");
+                                    // Setup reservaciones
+                                    // botonReservaciones cargado desde jsp llamado en ServletCargarAreas
+                                    // username es div en jsp
+                                    // area, medico, clinica, fecha definidos en jsp
+                                    $("#botonReservar").click(function(){
+                                        $.ajax({
+                                            url: '/base-datos/util.php',
+                                            type: 'POST',
+                                            data: {
+                                                servlet: 'slr.db2.controller.ServletReservacion',
+                                                IdUs: $("#username").html(),
+                                                IdEsp: $("#area").val(),
+                                                IdDoc: $("#medico").val(),
+                                                IdClin: $("#clinica").val(),
+                                                tsdate: $.datepicker.formatDate("@", $("#fecha").val())
+                                            },
+                                            success: function(dt){
+                                                $("#reservaciones").html($("#reservaciones").html() + dt).trigger("create");
+                                            }
+                                        });
+                                    });
                                 }
                             });
-                            $("#tituloSistema").html("<h1>Reservaciones</h1>").trigger("create");
-                            
-                            // Setup inserciones
-                            // Insertar es parte del resultado de ServletEntrada al cargar usuarios
-                            $("#insertar").click(function(){
-                                $.ajax({
-                                    url: '/base-datos/util.php',
-                                    type: 'POST',
-                                    data: {
-                                        login: $("#nombre").val(),
-                                        pase: $("#pwd").val(),
-                                        servlet: 'slr.db2.controller.ServletInsercion'
-                                    },
-                                    success: function(dt){
-                                        $("#inserciones").html($("#inserciones").html() + dt).trigger("create");
-                                    },
-                                    failure: function(){
-                                        alert("Algo anda mal...");
-                                    }
-                                });
-                            });
-                            
-                            // Setup reservaciones
-                            // botonReservaciones cargado desde jsp
-                            // username es div en jsp
-                            // area, medico, clinica, fecha definidos en jsp
-                            $("#botonReservar").click(function(){
-                                $.ajax({
-                                    url: '/base-datos/util.php',
-                                    type: 'POST',
-                                    data: {
-                                        servlet: 'slr.db2.controller.ServletReservacion',
-                                        IdUs: $("#username").html(),
-                                        IdEsp: $("#area").val(),
-                                        IdDoc: $("#medico").val(),
-                                        IdClin: $("#clinica").val(),
-                                        tsdate: $.datepicker.formatDate("@", $("#fecha").val())
-                                    },
-                                    success: function(dt){
-                                        $("#inserciones").html($("#inserciones").html() + dt).trigger("create");
-                                    }
-                                });
+
+
+                            $.ajax({
+                                url: '/base-datos/util.php',
+                                type: 'POST',
+                                data: { // Re-implementado como despachador
+                                    servlet: 'slr.db2.controller.ServletRegistro'
+                                },
+                                success: function(dttt){
+                                    $("#insercion").html(dttt).trigger("create");
+                                    // Setup inserciones
+                                    // Insertar es parte del resultado de ServletRegistro al cargar usuarios
+                                    $("#insertar").click(function(){
+                                        $.ajax({
+                                            url: '/base-datos/util.php',
+                                            type: 'POST',
+                                            data: {
+                                                login: $("#nombre").val(),
+                                                pase: $("#pwd").val(),
+                                                servlet: 'slr.db2.controller.ServletInsercion'
+                                            },
+                                            success: function(dt){
+                                                $("#inserciones").html($("#inserciones").html() + dt).trigger("create");
+                                            },
+                                            failure: function(){
+                                                alert("Algo anda mal...");
+                                            }
+                                        });
+                                    });
+                                }
                             });
                         },
                         failure: function(){
@@ -108,7 +118,7 @@
                         url: '/base-datos/util.php',
                         type: 'POST',
                         data: {
-                            servlet: 'ServletLogout'
+                            servlet: 'slr.db2.controller.ServletLogout'
                         },
                         success: function(dt){
                             alert("cookies borradas");
@@ -125,9 +135,9 @@
             </div>
             <div data-role="content">
                 <div data-role="fieldcontain">
-                    <label for="textinput">Login:</label>
+                    <label for="login">Login:</label>
                     <input type="text" name="textinput" id="login" value="" /><br>
-                    <label for="passinput">Password:</label>
+                    <label for="password">Password:</label>
                     <input type="password" name="passinput" id="password" value="" /><br>
                 </div>
                 <ul data-role="listview">
@@ -138,25 +148,57 @@
                 <h4>Sistema X</h4>
             </div>
         </div>
-        <div data-role="page" id="res">
+        <div data-role="page" id="res" align="center">
             <div data-role="header">
-                <div id="tituloSistema"></div> <!-- Cargar con AJAX hacia #resultado desde jsp, asignar el titulo dinamicamente -->
+                <h1>Inicio</h1> <!-- Cargar con AJAX hacia #resultado desde jsp, asignar el titulo dinamicamente -->
             </div>
             <div data-role="content">
                 <div id="resultado"></div>
             </div>
             <div data-role="footer" data-position="fixed" align="center">
                 <ul data-role="listview">
-                    <li><a href="#page" id="logout" class="ui-btn ui-btn-icon-left ui-icon-back ui-btn-b">Regresar</a></li>
+                    <li><a href="#page" id="logout" class="ui-btn ui-btn-icon-left ui-icon-back ui-btn-b">Salir</a></li>
                 </ul>
             </div>
         </div>
-        
-        <div id="entrada"></div>
-        <div id="insercion"></div>
-        <div id="reservacion"></div>
-        <div id="calendario"></div>
-        <div id="temp"></div>
 
+        <div id="alta" data-role="page" align="center">
+            <div data-role="header">
+                <H1>Alta de usuarios</H1>
+            </div>
+            <div id="insercion" data-role="content"></div>
+            <div data-role="footer" data-position="fixed" align="center">
+                <ul data-role="listview">
+                    <li><a href="#page" id="logout" class="ui-btn ui-btn-icon-left ui-icon-back ui-btn-b">Salir</a></li>
+                    <li><a href="#res" class="ui-btn ui-btn-icon-left ui-icon-back ui-btn-b">Inicio</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="resz" data-role="page" align="center">
+            <div data-role="header">
+                <H1>Reservaciones</H1>
+            </div>
+            <div id="reservacion" data-role="content"></div>
+            <div data-role="footer" data-position="fixed" align="center">
+                <ul data-role="listview">
+                    <li><a href="#page" id="logout" class="ui-btn ui-btn-icon-left ui-icon-back ui-btn-b">Salir</a></li>
+                    <li><a href="#res" class="ui-btn ui-btn-icon-left ui-icon-back ui-btn-b">Inicio</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="cald" data-role="page" align="center">
+            <div data-role="header">
+                <H1>Calendario</H1>
+            </div>
+            <div id="calendario" data-role="content"></div>
+            <div data-role="footer" data-position="fixed" align="center">
+                <ul data-role="listview">
+                    <li><a href="#page" id="logout" class="ui-btn ui-btn-icon-left ui-icon-back ui-btn-b">Salir</a></li>
+                    <li><a href="#res" class="ui-btn ui-btn-icon-left ui-icon-back ui-btn-b">Inicio</a></li>
+                </ul>
+            </div>
+        </div>
     </body>
 </html>

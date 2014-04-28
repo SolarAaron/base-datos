@@ -4,37 +4,39 @@
  */
 package slr.db2.model;
 
+import java.math.BigDecimal;
+
 /**
  *
  * @author aaron
  */
 public class Usuario{
     private static final String[] campos = {"Id", "Login", "Password", "Llave_sec"};
-    
-    private int Id;
+
+    private BigDecimal Id;
     private String Login, Password, Llave_sec;
 
     public Usuario(){
-        this.Id = 0;
+        this.Id = new BigDecimal("0");
         Login = Password = Llave_sec = "";
     }
-    
-    public Usuario(int Id, String Login, String Password, String Llave_sec) throws Exception{
+
+    public Usuario(BigDecimal Id, String Login, String Password, String Llave_sec) throws Exception{
         this.Id = Id;
         this.Login = Login;
         this.Password = Password;
         this.Llave_sec = Llave_sec;
     }
-    
+
     public String[] columns(){
         return campos;
     }
 
-    public int getId() {
+    public BigDecimal getId() {
         return Id;
     }
 
-    public void setId(int Id) {
+    public void setId(BigDecimal Id) {
         this.Id = Id;
     }
 
@@ -65,7 +67,7 @@ public class Usuario{
     public void set(String col, Object val){
         switch(col){
             case "Id":
-                setId((int) val);
+                setId((BigDecimal) val);
                 break;
             case "Login":
                 setLogin((String) val);
@@ -80,7 +82,7 @@ public class Usuario{
                 throw new Error("Columna desconocida");
         }
     }
-    
+
     public Object get(String col){
         switch(col){
             case "Id":

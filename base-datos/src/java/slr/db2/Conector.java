@@ -16,6 +16,6 @@ import slr.db2.lib.DBType;
  */
 public class Conector{
     public static Connection conectar(){
-        return new Conexion("MITZI", "mitzi", null).conectar(DBType.ORATHIN, "localhost:1521");
+        return new Conexion("aaron", "BE47n04", null).conectar(DBType.ORATHIN, "localhost:1521");
     }
 }

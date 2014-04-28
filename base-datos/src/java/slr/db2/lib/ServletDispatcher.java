@@ -34,7 +34,7 @@ public class ServletDispatcher extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            System.err.println("Entrando a servlet");
+            System.err.println("Entrando a servlet " + request.getParameter("servlet"));
             try {
                 IServletExtension ext = (IServletExtension) Class.forName(request.getParameter("servlet")).newInstance();
                 ext.procesar(request, response, method, out);
